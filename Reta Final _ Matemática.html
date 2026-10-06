@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reta Final | Matemática</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F5FB;--ink:#1B1F3B;--mut:#5A5F7D;--card:#fff;--line:#D9DDEE;--hi:#FFD23F;--ok:#1E9E68;--okbg:#DDF5EA;--no:#C23B3B;--nobg:#FBE3E3;--grid:#E4E8F4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12142A;--ink:#EEF0FF;--mut:#A3A8CC;--card:#1C1F3F;--line:#33376A;--okbg:#14382B;--nobg:#42202A;--grid:#1A1D3A;--ok:#4BD39B;--no:#FF8A8A}}
+:root[data-theme="dark"]{--bg:#12142A;--ink:#EEF0FF;--mut:#A3A8CC;--card:#1C1F3F;--line:#33376A;--okbg:#14382B;--nobg:#42202A;--grid:#1A1D3A;--ok:#4BD39B;--no:#FF8A8A}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;font-size:16px;line-height:1.55;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+main{max-width:560px;margin:0 auto;padding:20px 18px 48px}
+h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,sans-serif;line-height:1.15;margin:0}
+h1{font-size:2.3rem;font-weight:800}
+h2{font-size:1.4rem;font-weight:800;margin:28px 0 10px}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:8px 0}
+.mut{color:var(--mut)}
+.track{height:6px;background:var(--hi);border-radius:3px;position:relative;margin:14px 0 16px;width:100%}
+.track:after{content:"";position:absolute;right:0;top:-5px;width:16px;height:16px;border-radius:50%;background:var(--ink);border:3px solid var(--hi)}
+button{font:inherit;color:inherit;cursor:pointer}
+.opt,.topic{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;margin:8px 0}
+.opt:hover,.topic:hover{border-color:var(--ink)}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.no{background:var(--nobg);border-color:var(--no)}
+button:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.topic[disabled]{opacity:.55;cursor:default}
+.topic small{display:block;color:var(--mut)}
+.chip{display:inline-block;border:1.5px solid var(--ink);border-radius:999px;padding:6px 12px;margin:4px 6px 0 0;background:transparent;font-size:.9rem}
+.chip.on{background:var(--hi);color:#1B1F3B;border-color:var(--hi);font-weight:600}
+.box{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.tip{border-left:5px solid var(--hi);border-radius:0;background:var(--card);padding:10px 14px;margin:12px 0}
+.back{background:none;border:0;padding:8px 0;color:var(--mut);font-size:.95rem}
+.ex{font-size:.95rem;margin-top:8px}
+.big{font-family:"Bricolage Grotesque",sans-serif;font-size:1.15rem}
+@media (prefers-reduced-motion:no-preference){.opt,.topic{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+var PROFILES={prova:{n:"Foco na prova",d:"Questões, atalhos e pegadinhas."},estudante:{n:"Quero entender de verdade",d:"Lógica por trás de cada conta."},dia:{n:"Matemática do dia a dia",d:"Exemplos reais de compra, receita e dinheiro."}};
+var QUIZ=[
+{q:"Qual é o seu objetivo agora?",o:[["Passar em uma prova","prova"],["Aprender a matéria de verdade","estudante"],["Usar matemática no dia a dia","dia"]]},
+{q:"Como você prefere estudar?",o:[["Resolvendo questões","prova"],["Entendendo a lógica","estudante"],["Com exemplos reais","dia"]]},
+{q:"Quanto tempo você tem por dia?",o:[["Poucos minutos, direto ao ponto","prova"],["Uns 30 minutos com calma","estudante"],["Só quando surge uma situação real","dia"]]}];
+var CATS=[
+{n:"Base",t:["porc","razao"]},
+{n:"Matemática financeira",t:["juros"]},
+{n:"Funções e geometria",t:["func","geo"]},
+{n:"Dados e chance",t:["est","prob"]}];
+var T={
+porc:{n:"Porcentagem",s:"Aumentos e descontos",teo:"Porcentagem é uma fração de 100. 20% de 80 = 0,20 × 80 = 16. Para aumentar 15%, multiplique por 1,15. Para descontar 15%, multiplique por 0,85.",exe:"Tênis de R$ 200 com 30% de desconto: 200 × 0,70 = R$ 140.",
+tip:{prova:"Pegadinha: aumento e desconto seguidos nunca se cancelam.",estudante:"Por que multiplicar? 1,15 é 100% do valor mais 15%, tudo de uma vez.",dia:"Na promoção, confira: de R$ 200 por R$ 140 é 30% de desconto."},
+ex:[{q:"Um produto de R$ 150 sobe 20%. Qual o novo preço?",o:["R$ 170","R$ 180","R$ 200"],c:1,e:"150 × 1,20 = 180."},{q:"O preço sobe 10% e depois cai 10%. O que acontece?",o:["Volta ao original","Fica 1% abaixo","Fica 1% acima"],c:1,e:"1,10 × 0,90 = 0,99, ou seja, 1% abaixo."}],
+g:"E se o desconto vier antes do aumento? O resultado é o mesmo, porque multiplicação não liga para a ordem."},
+razao:{n:"Razão e proporção",s:"Regra de três",teo:"Razão compara duas grandezas (a/b). Proporção é a igualdade de duas razões: a/b = c/x, logo x = b·c/a. Na regra de três direta, as duas grandezas crescem juntas. Na inversa, uma cresce e a outra diminui.",exe:"3 kg custam R$ 18. Então 5 kg custam 18 × 5 ÷ 3 = R$ 30.",
+tip:{prova:"Antes de montar a conta, decida: direta ou inversa?",estudante:"Proporcionalidade é a ideia por trás de escala, mapa e velocidade.",dia:"Receita, combustível e escala de mapa: tudo é regra de três."},
+ex:[{q:"Uma receita para 4 pessoas usa 300 g de arroz. Quanto para 10 pessoas?",o:["600 g","750 g","900 g"],c:1,e:"300 × 10 ÷ 4 = 750 g."},{q:"6 operários fazem uma obra em 10 dias. Quantos dias levam 3 operários?",o:["5 dias","15 dias","20 dias"],c:2,e:"É inversa: metade dos operários, o dobro do tempo."}],
+g:"Como saber se é inversa? Pergunte: se uma coisa aumenta, a outra aumenta ou diminui?"},
+juros:{n:"Juros simples e compostos",s:"Do cartão ao financiamento",teo:"Juros simples: J = C · i · t, e o juro cresce sempre sobre o valor inicial. Juros compostos: M = C · (1 + i)^t, e o juro cresce sobre o valor já acrescido.",exe:"R$ 1.000 a 10% ao mês por 2 meses. Simples: R$ 1.200. Composto: 1.000 × 1,1² = R$ 1.210.",
+tip:{prova:"Leia as unidades: taxa ao mês pede tempo em meses. Misturou, converta.",estudante:"Composto é o mesmo cálculo repetido: cada mês, o montante vira o novo capital.",dia:"Parcelar sem juros pode custar caro se o preço à vista tiver desconto."},
+ex:[{q:"R$ 500 a 2% ao mês, juros simples, por 3 meses. Quanto rende de juros?",o:["R$ 10","R$ 30","R$ 300"],c:1,e:"500 × 0,02 × 3 = 30."},{q:"R$ 2.000 a 5% ao mês, juros compostos, por 2 meses. Qual o montante?",o:["R$ 2.200","R$ 2.205","R$ 2.250"],c:1,e:"2.000 × 1,05² = 2.205."}],
+g:"Por que o cartão rotativo assusta tanto? Porque os juros são compostos e crescem sobre eles mesmos."},
+func:{n:"Funções",s:"Reta e parábola",teo:"Função é uma regra que liga cada x a um único y. Função afim: f(x) = ax + b, com gráfico em reta; a é a inclinação e b é onde corta o eixo y. Função quadrática: f(x) = ax² + bx + c, com gráfico em parábola; se a > 0, ela abre para cima.",exe:"Táxi com bandeirada de R$ 6 e R$ 3 por km: f(x) = 3x + 6. Para 10 km: 3 × 10 + 6 = R$ 36.",
+tip:{prova:"Em questão de gráfico, ache primeiro onde a reta corta o eixo y (o valor de b).",estudante:"O a diz quanto y muda quando x sobe 1 unidade.",dia:"Plano de celular com taxa fixa mais valor por uso é uma função afim."},
+ex:[{q:"Em f(x) = 2x + 5, quanto vale f(4)?",o:["9","13","18"],c:1,e:"2 × 4 + 5 = 13."},{q:"Na parábola f(x) = x² − 6x + 5, qual é o x do vértice?",o:["2","3","5"],c:1,e:"xv = −b ÷ 2a = 6 ÷ 2 = 3."}],
+g:"Por que o lucro máximo de uma empresa costuma estar no vértice de uma parábola?"},
+geo:{n:"Geometria",s:"Área, volume e Pitágoras",teo:"Área do retângulo: base × altura. Do triângulo: base × altura ÷ 2. Do círculo: π·r². Volume de um bloco: comprimento × largura × altura. No triângulo retângulo, a² = b² + c² (Pitágoras), em que a é a hipotenusa.",exe:"Sala de 4 m por 5 m com piso a R$ 40 o m²: área de 20 m², custo de 20 × 40 = R$ 800.",
+tip:{prova:"Confira as unidades: cm² e m² não se misturam. Converta antes de calcular.",estudante:"Pitágoras vale só para triângulo retângulo, e o lado maior é a hipotenusa.",dia:"Piso, tinta e azulejo: calcule a área e some uns 10% de sobra."},
+ex:[{q:"Um triângulo retângulo tem catetos 6 e 8. Qual a hipotenusa?",o:["10","12","14"],c:0,e:"6² + 8² = 100, e a raiz de 100 é 10."},{q:"Uma caixa-d'água de 2 m × 1 m × 1,5 m comporta quantos litros? (1 m³ = 1.000 L)",o:["300","3.000","30.000"],c:1,e:"Volume = 3 m³ = 3.000 L."}],
+g:"Se você dobrar o lado de um quadrado, a área dobra? Teste com um quadrado de lado 2."},
+est:{n:"Estatística básica",s:"Média, mediana e moda",teo:"Média: soma dos valores ÷ quantidade. Mediana: valor do meio com os dados em ordem. Moda: valor que mais aparece. Desvio padrão: quanto os dados se espalham em torno da média.",exe:"Notas 6, 7, 7, 8, 12. Média = 40 ÷ 5 = 8. Mediana = 7. Moda = 7.",
+tip:{prova:"Antes de achar a mediana, ordene os dados. É o erro mais comum.",estudante:"A média sofre com valores extremos; a mediana quase não.",dia:"Em salários e preços de imóveis, a mediana costuma ser mais honesta que a média."},
+ex:[{q:"Notas 4, 6, 6 e 9. Qual a média?",o:["6","6,25","7"],c:1,e:"(4 + 6 + 6 + 9) ÷ 4 = 25 ÷ 4 = 6,25."},{q:"Dados: 2, 3, 3, 5 e 100. Qual medida descreve melhor o conjunto?",o:["Média","Mediana","Nenhuma"],c:1,e:"O 100 puxa a média para 22,6, enquanto a mediana é 3."}],
+g:"Se um chefe dobra o próprio salário, o que acontece com a média da equipe? E com a mediana?"},
+prob:{n:"Probabilidade",s:"Chance e eventos",teo:"Probabilidade = casos favoráveis ÷ casos possíveis, um número entre 0 e 1 (ou 0% e 100%). Eventos independentes: multiplique as probabilidades. Evento complementar: P(não A) = 1 − P(A).",exe:"Dado de 6 faces: P(sair número par) = 3 ÷ 6 = 50%.",
+tip:{prova:"Pergunte: a conta é 'e' (multiplica) ou 'ou' (soma)?",estudante:"Probabilidade não diz o que vai acontecer; diz o que esperar em muitas repetições.",dia:"Previsão de 30% de chuva: em situações parecidas, chove em cerca de 3 de cada 10."},
+ex:[{q:"Uma urna tem 3 bolas vermelhas e 7 azuis. Qual a chance de tirar uma vermelha?",o:["3%","30%","70%"],c:1,e:"3 ÷ 10 = 30%."},{q:"Jogando uma moeda duas vezes, qual a chance de dar cara nas duas?",o:["25%","50%","75%"],c:0,e:"Eventos independentes: 1/2 × 1/2 = 1/4 = 25%."}],
+g:"Se deu cara 5 vezes seguidas, a próxima tem mais chance de dar coroa? Pense em independência."}};
+var S={view:"home",qi:0,sc:{},profile:null,topic:null};
+var app=document.getElementById("app");
+function go(v,t){S.view=v;S.topic=t||null;render();window.scrollTo(0,0)}
+function pick(p){S.sc[p]=(S.sc[p]||0)+1;S.qi++;if(S.qi>=QUIZ.length){var b=null,m=0;for(var k in S.sc){if(S.sc[k]>m){m=S.sc[k];b=k}}S.profile=b}render()}
+function setP(p){S.profile=p;render()}
+function redo(){S.qi=0;S.sc={};S.profile=null;render()}
+function ans(i,j,btn){var e=T[S.topic].ex[i],ok=j===e.c;btn.classList.add(ok?"ok":"no");var fb=document.getElementById("fb"+i);fb.textContent=(ok?"Certo. ":"Quase. ")+e.e}
+function home(){var h='<h1>Reta final</h1><div class="track"></div><p class="mut">Matemática curta, com exemplo e exercício. Descubra seu perfil e escolha um tema.</p>';
+if(!S.profile){var q=QUIZ[S.qi];h+='<h2>'+q.q+'</h2><p class="mut">Pergunta '+(S.qi+1)+' de '+QUIZ.length+'</p>';q.o.forEach(function(o){h+='<button class="opt" onclick="pick(\''+o[1]+'\')">'+o[0]+'</button>'});}
+else{h+='<div class="box"><h3>'+PROFILES[S.profile].n+'</h3><p class="mut">'+PROFILES[S.profile].d+'</p><p class="ex mut">Trocar perfil:</p>';
+Object.keys(PROFILES).forEach(function(k){h+='<button class="chip'+(k===S.profile?' on':'')+'" onclick="setP(\''+k+'\')">'+PROFILES[k].n+'</button>'});
+h+='<p class="ex"><button class="back" onclick="redo()">Refazer o quiz</button></p></div>';}
+CATS.forEach(function(c){h+='<h2>'+c.n+'</h2>';c.t.forEach(function(id){var t=T[id],on=!!t.ex;h+='<button class="topic" '+(on?'onclick="go(\'topic\',\''+id+'\')"':'disabled')+'><h3>'+t.n+'</h3><small>'+t.s+'</small></button>'});});
+return h}
+function topic(){var t=T[S.topic],p=S.profile||"prova",h='<button class="back" onclick="go(\'home\')">Voltar aos temas</button><h1 style="font-size:1.9rem">'+t.n+'</h1><div class="track"></div>';
+h+='<h2>Teoria rápida</h2><p>'+t.teo+'</p><div class="box"><b>Exemplo.</b> '+t.exe+'</div><div class="tip">'+t.tip[p]+'</div><h2>Agora é com você</h2>';
+t.ex.forEach(function(e,i){h+='<p class="big">'+(i+1)+'. '+e.q+'</p>';e.o.forEach(function(o,j){h+='<button class="opt" onclick="ans('+i+','+j+',this)">'+o+'</button>'});h+='<p class="ex mut" id="fb'+i+'" aria-live="polite"></p>'});
+h+='<div class="box"><b>Para pensar.</b> '+t.g+'</div><button class="opt" onclick="go(\'home\')">Escolher outro tema</button>';return h}
+function render(){app.innerHTML=S.view==="home"?home():topic()}
+render();
+</script>
+</body>
+</html>
